@@ -3,22 +3,24 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
-[[source]]
-url = "https://download.pytorch.org/whl/cpu"
-verify_ssl = true
-name = "pytorch"
-
 [packages]
-streamlit = "*"
-elasticsearch = "==8.14.0"
-psycopg2-binary = "==2.9.9"
+openai = "*"
+scikit-learn = "*"
+pandas = "==1.5.3"  # Updated to match requirements.txt
+flask = "*"
+elasticsearch = "*"
+sentence-transformers = "==2.2.2"  # Updated to match requirements.txt
 python-dotenv = "*"
-openai = "==1.35.7"
-sentence-transformers = "==2.7.0"
-numpy = "==1.26.4"
-torch = {version = "==2.3.1", index = "pytorch"}
+notebook = "==7.1.2"
+hyperopt = "*"
+streamlit = "*"
+numpy = "==2.1.1"  # Match the specific version needed
+psycopg2-binary = "==2.9.6"  # Updated to match requirements.txt
 
 [dev-packages]
+tqdm = "*"
+notebook = "==7.1.2"
+ipywidgets = "*"
 
 [requires]
 python_version = "3.12"

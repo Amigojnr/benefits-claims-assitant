@@ -21,7 +21,7 @@ BASE_URL = "https://github.com/DataTalksClub/llm-zoomcamp/blob/main"
 
 def fetch_documents():
     print("Fetching documents...")
-    file_path = "/app/data/document_with_id.json"
+    file_path = "/workspaces/benefits-claims-assitant/stream_app/app/document-with-ids.json"
     
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"The file {file_path} does not exist.")
@@ -35,14 +35,14 @@ def fetch_documents():
 
 def fetch_ground_truth():
     print("Fetching ground truth data...")
-    file_path = "/data/ground_truth_data.csv"
+    file_path = "/workspaces/benefits-claims-assitant/stream_app/app/ground-truth-data.csv"
     
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"The file {file_path} does not exist.")
     
     df_ground_truth = pd.read_csv(file_path)
     df_ground_truth = df_ground_truth[
-        df_ground_truth.course == "machine-learning-zoomcamp"
+        df_ground_truth.section == "general claim benefits"
     ]
     ground_truth = df_ground_truth.to_dict(orient="records")
     print(f"Fetched {len(ground_truth)} ground truth records")
@@ -62,10 +62,10 @@ def setup_elasticsearch():
         "settings": {"number_of_shards": 1, "number_of_replicas": 0},
         "mappings": {
             "properties": {
-                "text": {"type": "text"},
-                "section": {"type": "text"},
+                "answer": {"type": "text"},
+                "category": {"type": "text"},
                 "question": {"type": "text"},
-                "course": {"type": "keyword"},
+                "section": {"type": "keyword"},
                 "id": {"type": "keyword"},
                 "question_text_vector": {
                     "type": "dense_vector",
@@ -87,8 +87,8 @@ def index_documents(es_client, documents, model):
     print("Indexing documents...")
     for doc in tqdm(documents):
         question = doc["question"]
-        answer = doc["text"]
-        doc["question_text_vector"] = model.encode(question + " " + answer).tolist()
+        answer = doc["answer"]
+        doc["question_answer_vector"] = model.encode(question + " " + answer).tolist()
         es_client.index(index=INDEX_NAME, document=doc)
     print(f"Indexed {len(documents)} documents")
 
